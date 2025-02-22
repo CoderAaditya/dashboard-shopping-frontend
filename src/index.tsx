@@ -4,7 +4,6 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { ChakraProvider,extendTheme } from "@chakra-ui/react";
-// import './assets/tailwind.css';
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

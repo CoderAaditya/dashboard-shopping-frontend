@@ -62,6 +62,7 @@ const Challenge: React.FC = () => {
     setMaxDomainsError(domains.length >= numDomainsRequired);
   }, [domains]);
 
+  //Debounce for checking domain availability - 
   const debouncedCheck = useRef(
     debounce(async (value: string) => {
       const response = await dispatch(isDomainAvailable(value)).unwrap();
@@ -69,12 +70,14 @@ const Challenge: React.FC = () => {
     }, 500)
   ).current;
 
+  //Domain validation function
   const validateDomain = (domain: string) => {
     const domainRegex =
       /^(?!https?:\/\/)(?!www\.)[a-zA-Z0-9-]+\.(com|xyz|app)$/i;
     return domainRegex.test(domain);
   };
 
+  //Domain Input Change handeling function 
   const handleDomainInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDomainError(false);
     setInvalidDomainError(false);
@@ -87,6 +90,7 @@ const Challenge: React.FC = () => {
     debouncedCheck(e.target.value);
   };
 
+  //Add Domain handeling function
   const handleAddDomain = async () => {
     if (domainInput.trim() && !domainError && !maxDomainsError) {
       await dispatch(addDomain(domainInput));
@@ -96,12 +100,14 @@ const Challenge: React.FC = () => {
     }
   };
 
+  //Open Model function fro edit - 
   const handleEditDomain = (domain: string) => {
     setEditingDomain(domain);
     setNewDomainName(domain);
     onOpen();
   };
 
+  //Update domain name fucntion and API call
   const handleUpdateDomain = async () => {
     if (
       editingDomain &&
@@ -117,11 +123,13 @@ const Challenge: React.FC = () => {
     }
   };
 
+  //Delete Domain COnfirm function
   const confirmDeleteDomain = (domain: string) => {
     setSelectedDomain(domain);
     openDeleteDialog();
   };
 
+  //Delete domain name fucntion and API call
   const handleDeleteDomain = async () => {
     if (selectedDomain) {
       await dispatch(deleteDomain(selectedDomain));
@@ -131,12 +139,14 @@ const Challenge: React.FC = () => {
     }
   };
 
+  //Clear Cart function by Clearing all domains in DB
   const handleClearCart = async () => {
     await dispatch(deleteAllDomains()).unwrap();
     dispatch(fetchDomains());
     toast({ title: "All domains cleared", status: "info", duration: 2000 });
   };
 
+  //Copy Domains to clipboard function
   const handleCopyDomains = () => {
     const domainList = domains.map((domain) => domain.name).join(", ");
     navigator.clipboard.writeText(domainList).then(() => {
